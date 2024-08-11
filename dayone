@@ -1,0 +1,53 @@
+1568. Minimum Number of Days to Disconnect Island
+
+class Solution(object):
+    def minDays(self, grid):
+        """
+        :type grid: List[List[int]]
+        :rtype: int
+        """
+        def is_connected():
+            visited = [[False] * n for _ in range(m)]
+            
+            def dfs(x, y):
+                if x < 0 or x >= m or y < 0 or y >= n or visited[x][y] or grid[x][y] == 0:
+                    return
+                visited[x][y] = True
+                for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+                    dfs(x + dx, y + dy)
+            
+            islands = 0
+            for i in range(m):
+                for j in range(n):
+                    if grid[i][j] == 1 and not visited[i][j]:
+                        if islands == 1: 
+                            return False
+                        islands += 1
+                        dfs(i, j)
+            
+            return islands == 1
+
+        def count_land():
+            return sum(sum(row) for row in grid)
+
+        m, n = len(grid), len(grid[0])
+
+        if not is_connected():
+            return 0
+        
+        if count_land() <= 1:
+            return 1
+
+        for i in range(m):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    grid[i][j] = 0
+                    if not is_connected():
+                        return 1
+                    grid[i][j] = 1
+
+        return 2
+
+solution = Solution()
+print(solution.minDays([[0,1,1,0],[0,1,1,0],[0,0,0,0]])) 
+print(solution.minDays([[1,1]]))
