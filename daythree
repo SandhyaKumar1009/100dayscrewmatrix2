@@ -1,0 +1,26 @@
+
+40. Combination Sum II
+
+class Solution(object):
+    def combinationSum2(self, candidates, target):
+        candidates.sort()
+        result = []
+        def backtrack(start, curr_combination, curr_target):
+            if curr_target == 0:
+                result.append(curr_combination[:])
+                return
+            for i in range(start, len(candidates)):
+                if curr_target < candidates[i]:
+                    break
+ 
+                if i > start and candidates[i] == candidates[i - 1]:
+                    continue
+    
+                curr_combination.append(candidates[i])
+
+                backtrack(i + 1, curr_combination, curr_target - candidates[i])
+ 
+                curr_combination.pop()
+        backtrack(0, [], target)
+        
+        return result
